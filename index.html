@@ -480,17 +480,18 @@
         if (typeof miro !== 'undefined') {
             miro.onReady(async () => {
                 console.log('Miro SDK ready - Station:', stationId);
-                await loadFromBoard();
-                showStatus('Station ready');
                 
-                // Toolbar integration
-                miro.board.ui.on('icon:click', () => {
-                    miro.board.ui.openPanel({
+                // Register toolbar icon
+                miro.board.ui.on('icon:click', async () => {
+                    await miro.board.ui.openPanel({
                         url: window.location.href,
                         width: 350,
                         height: 500
                     });
                 });
+                
+                await loadFromBoard();
+                showStatus('Station ready');
             });
         } else {
             // Demo mode
