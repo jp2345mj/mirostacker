@@ -3,226 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sticky Note Pads</title>
+    <title>Sticky Note Pads Station</title>
     <script src="https://miro.com/app/static/sdk/v2/miro.js"></script>
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-            background: #f8fafc; 
-            padding: 20px;
-            max-width: 350px;
-        }
-        
-        h1 {
-            font-size: 20px;
-            color: #1e293b;
-            margin-bottom: 20px;
-        }
-        
-        textarea {
-            width: 100%;
+            background: #ffffff; 
+            margin: 0;
             padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            width: 320px;
+            min-height: 200px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .station-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .station-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .station-title:hover {
+            background: #f3f4f6;
+        }
+        
+        .station-title input {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            width: 180px;
+        }
+        
+        .station-title input:focus {
+            outline: 1px solid #3b82f6;
+            background: white;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .station-controls {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 14px;
-            resize: vertical;
-            min-height: 80px;
-            margin-bottom: 12px;
+            color: #6b7280;
         }
         
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
+        .control-btn:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .add-form {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
-            font-size: 14px;
+            padding: 12px;
             margin-bottom: 12px;
+            display: none;
         }
         
-        button {
-            width: 100%;
-            padding: 12px;
+        .add-form.show {
+            display: block;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .quick-text {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .quick-color {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .add-btn {
+            padding: 6px 12px;
             background: #3b82f6;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 4px;
+            font-size: 11px;
             cursor: pointer;
-            margin-bottom: 12px;
         }
         
-        button:hover {
+        .add-btn:hover {
             background: #2563eb;
         }
         
-        .notepad-top { 
-            cursor: pointer; 
-            padding: 20px; 
-            background: #fef08a;
-            border-radius: 8px;
-            text-align: center;
-            border: 2px solid #eab308;
-            transition: all 0.2s;
-            margin: 10px 0;
+        .notepad-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         
-        .notepad-top:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .status-message { 
-            margin-top: 12px; 
-            font-size: 12px; 
+        .notepad-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             padding: 8px;
+            border: 1px solid #e5e7eb;
             border-radius: 6px;
-            text-align: center;
+            background: white;
         }
         
-        .status-success {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-        
-        .status-error {
-            background: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-        
-        .color-preview {
-            display: inline-block;
+        .notepad-color {
             width: 20px;
             height: 20px;
             border-radius: 4px;
-            margin-right: 8px;
-            vertical-align: middle;
+            border: 1px solid #d1d5db;
+            flex-shrink: 0;
+        }
+        
+        .color-yellow { background: #fef08a; }
+        .color-green { background: #bbf7d0; }
+        .color-blue { background: #bfdbfe; }
+        .color-red { background: #fecaca; }
+        .color-orange { background: #fed7aa; }
+        .color-violet { background: #e9d5ff; }
+        .color-light_blue { background: #e0f2fe; }
+        
+        .notepad-content {
+            flex: 1;
+            cursor: pointer;
+            min-height: 20px;
+        }
+        
+        .notepad-content:hover {
+            background: #f9fafb;
+            margin: -4px;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        
+        .notepad-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 2px;
+        }
+        
+        .notepad-preview {
+            font-size: 10px;
+            color: #6b7280;
+            line-height: 1.2;
+        }
+        
+        .notepad-delete {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .notepad-item:hover .notepad-delete {
+            opacity: 1;
+        }
+        
+        .notepad-delete:hover {
+            background: #fef2f2;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 11px;
+            font-style: italic;
+            padding: 20px 10px;
+        }
+        
+        .status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            padding: 6px 10px;
+            background: #10b981;
+            color: white;
+            border-radius: 4px;
+            font-size: 11px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .status.error {
+            background: #ef4444;
+        }
+        
+        .templates-dropdown {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>📝 Sticky Note Pads</h1>
-    <div>
-        <textarea id="noteText" placeholder="Enter your note text..." rows="3"></textarea>
-        
-        <select id="colorSelect">
-            <option value="yellow">🟡 Yellow</option>
-            <option value="green">🟢 Green</option>
-            <option value="blue">🔵 Blue</option>
-            <option value="red">🔴 Red</option>
-            <option value="orange">🟠 Orange</option>
-            <option value="violet">🟣 Violet</option>
-            <option value="light_blue">🔵 Light Blue</option>
-        </select>
-        
-        <button id="createBtn">Create Notepad Stack</button>
+    <div class="station-header">
+        <div class="station-title" id="stationTitle">📝 Notepad Station</div>
+        <div class="station-controls">
+            <button class="control-btn" id="addBtn" title="Add Notepad">➕</button>
+            <button class="control-btn" id="settingsBtn" title="Station Settings">⚙️</button>
+        </div>
     </div>
     
-    <div id="stackArea"></div>
-    <div class="status-message" id="statusMsg"></div>
+    <div class="add-form" id="addForm">
+        <div class="form-row">
+            <input type="text" class="quick-text" id="quickText" placeholder="Enter notepad text..." maxlength="100">
+            <select class="quick-color" id="quickColor">
+                <option value="yellow">🟡</option>
+                <option value="green">🟢</option>
+                <option value="blue">🔵</option>
+                <option value="red">🔴</option>
+                <option value="orange">🟠</option>
+                <option value="violet">🟣</option>
+                <option value="light_blue">💙</option>
+            </select>
+            <button class="add-btn" id="quickAddBtn">Add</button>
+        </div>
+    </div>
+    
+    <div class="notepad-list" id="notepadList">
+        <div class="empty-state">Click ➕ to add your first notepad</div>
+    </div>
+    
+    <div class="status" id="status"></div>
 
     <script>
-        let noteText = '';
-        let selectedColor = 'yellow';
+        // Generate unique station ID
+        const stationId = 'station_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        let stationTitle = '📝 Notepad Station';
+        let notepads = [];
         let isPlacing = false;
         
-        const noteTextInput = document.getElementById('noteText');
-        const colorSelect = document.getElementById('colorSelect');
-        const createBtn = document.getElementById('createBtn');
-        const stackArea = document.getElementById('stackArea');
-        const statusMsg = document.getElementById('statusMsg');
+        // DOM elements
+        const stationTitleEl = document.getElementById('stationTitle');
+        const addBtn = document.getElementById('addBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const addForm = document.getElementById('addForm');
+        const quickText = document.getElementById('quickText');
+        const quickColor = document.getElementById('quickColor');
+        const quickAddBtn = document.getElementById('quickAddBtn');
+        const notepadList = document.getElementById('notepadList');
+        const status = document.getElementById('status');
 
-        function showStatus(message, type) {
-            statusMsg.textContent = message;
-            statusMsg.className = `status-message status-${type}`;
+        function showStatus(message, isError = false) {
+            status.textContent = message;
+            status.className = 'status' + (isError ? ' error' : '');
+            status.style.display = 'block';
             
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusMsg.textContent = '';
-                    statusMsg.className = 'status-message';
-                }, 3000);
-            }
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 2000);
         }
 
-        function updateColorPreview() {
-            const colorMap = {
-                'yellow': '#fef08a',
-                'green': '#bbf7d0', 
-                'blue': '#bfdbfe',
-                'red': '#fecaca',
-                'orange': '#fed7aa',
-                'violet': '#e9d5ff',
-                'light_blue': '#e0f2fe'
-            };
-            
-            if (stackArea.querySelector('.notepad-top')) {
-                stackArea.querySelector('.notepad-top').style.backgroundColor = colorMap[selectedColor];
-            }
+        function generateId() {
+            return Date.now() + Math.random().toString(36).substr(2, 9);
         }
 
-        colorSelect.addEventListener('change', () => {
-            selectedColor = colorSelect.value;
-            updateColorPreview();
-        });
-
-        createBtn.addEventListener('click', () => {
-            noteText = noteTextInput.value.trim();
-            if (!noteText) {
-                showStatus('Please enter note text.', 'error');
+        function addNotepad(text, color) {
+            if (!text.trim()) {
+                showStatus('Enter notepad text', true);
                 return;
             }
-            showStack();
-            showStatus('Notepad created! Click to place notes on board.', 'success');
-        });
 
-        function showStack() {
-            stackArea.innerHTML = '';
-            
-            const colorMap = {
-                'yellow': '#fef08a',
-                'green': '#bbf7d0', 
-                'blue': '#bfdbfe',
-                'red': '#fecaca',
-                'orange': '#fed7aa',
-                'violet': '#e9d5ff',
-                'light_blue': '#e0f2fe'
+            const notepad = {
+                id: generateId(),
+                text: text.trim(),
+                color: color,
+                created: Date.now()
             };
+
+            notepads.push(notepad);
+            renderNotepads();
+            saveToBoard();
             
-            const top = document.createElement('div');
-            top.className = 'notepad-top';
-            top.style.backgroundColor = colorMap[selectedColor];
-            top.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 8px;">📝 Click to Place</div>
-                <div style="font-size: 12px; opacity: 0.7;">${noteText.substring(0, 50)}${noteText.length > 50 ? '...' : ''}</div>
-            `;
-            top.addEventListener('click', placeNote);
-            stackArea.appendChild(top);
+            showStatus('Notepad added');
         }
 
-        async function placeNote() {
+        function deleteNotepad(id) {
+            notepads = notepads.filter(pad => pad.id !== id);
+            renderNotepads();
+            saveToBoard();
+            showStatus('Notepad deleted');
+        }
+
+        function renderNotepads() {
+            if (notepads.length === 0) {
+                notepadList.innerHTML = '<div class="empty-state">Click ➕ to add your first notepad</div>';
+                return;
+            }
+
+            notepadList.innerHTML = notepads.map(notepad => `
+                <div class="notepad-item">
+                    <div class="notepad-color color-${notepad.color}"></div>
+                    <div class="notepad-content" onclick="placeNote('${notepad.id}')">
+                        <div class="notepad-text">${notepad.text.split('\n')[0]}</div>
+                        <div class="notepad-preview">${notepad.text.substring(0, 40)}${notepad.text.length > 40 ? '...' : ''}</div>
+                    </div>
+                    <button class="notepad-delete" onclick="deleteNotepad('${notepad.id}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        async function placeNote(notepadId) {
             if (isPlacing) return;
             
+            const notepad = notepads.find(pad => pad.id === notepadId);
+            if (!notepad) return;
+            
             isPlacing = true;
-            showStatus('Placing note on board...', 'success');
+            showStatus('Placing note...');
 
             try {
-                // Get user info from Miro
-                const userInfo = await miro.board.getUserInfo();
-                const userName = userInfo.name || 'Unknown User';
-                const timestamp = new Date().toLocaleString();
+                let finalContent = notepad.text;
                 
-                // Create content with user attribution
-                const finalContent = `${noteText}
+                // Try to get user info
+                try {
+                    const userInfo = await miro.board.getUserInfo();
+                    const userName = userInfo.name || 'User';
+                    const timestamp = new Date().toLocaleString();
+                    finalContent += `\n\n📝 ${userName}\n🕒 ${timestamp}`;
+                } catch (userErr) {
+                    // Fallback - just add timestamp
+                    const timestamp = new Date().toLocaleString();
+                    finalContent += `\n\n🕒 ${timestamp}`;
+                }
 
-📝 ${userName}
-🕒 ${timestamp}`;
-
-                // Create sticky note using Miro SDK v2
                 await miro.board.createStickyNote({
                     content: finalContent,
                     style: {
-                        fillColor: selectedColor,
+                        fillColor: notepad.color,
                         textAlign: 'left',
                         textAlignVertical: 'top'
                     },
@@ -232,61 +380,122 @@
                     height: 200
                 });
 
-                showStatus('✅ Sticky note placed on board!', 'success');
+                showStatus('✅ Note placed!');
                 
             } catch (err) {
                 console.error('Error placing note:', err);
-                
-                // Fallback without user info
-                try {
-                    const timestamp = new Date().toLocaleString();
-                    const fallbackContent = `${noteText}
-
-🕒 ${timestamp}`;
-
-                    await miro.board.createStickyNote({
-                        content: fallbackContent,
-                        style: {
-                            fillColor: selectedColor,
-                            textAlign: 'left',
-                            textAlignVertical: 'top'
-                        },
-                        x: 0,
-                        y: 0,
-                        width: 200,
-                        height: 200
-                    });
-
-                    showStatus('✅ Sticky note placed!', 'success');
-                } catch (finalErr) {
-                    console.error('Final error:', finalErr);
-                    showStatus('❌ Error placing sticky note', 'error');
-                }
+                showStatus('Error placing note', true);
             }
             
             isPlacing = false;
         }
 
-        // Initialize when Miro SDK is ready
-        if (typeof miro !== 'undefined') {
-            miro.onReady(() => {
-                console.log('Miro SDK is ready');
-                showStatus('Connected to Miro board', 'success');
+        async function saveToBoard() {
+            try {
+                const stationData = {
+                    id: stationId,
+                    title: stationTitle,
+                    notepads: notepads,
+                    updated: Date.now()
+                };
                 
-                // Add toolbar integration
+                if (typeof miro !== 'undefined' && miro.board) {
+                    await miro.board.setAppData(stationId, JSON.stringify(stationData));
+                }
+            } catch (err) {
+                console.error('Error saving station data:', err);
+            }
+        }
+
+        async function loadFromBoard() {
+            try {
+                if (typeof miro !== 'undefined' && miro.board) {
+                    const savedData = await miro.board.getAppData(stationId);
+                    if (savedData) {
+                        const stationData = JSON.parse(savedData);
+                        stationTitle = stationData.title || stationTitle;
+                        notepads = stationData.notepads || [];
+                        
+                        stationTitleEl.textContent = stationTitle;
+                        renderNotepads();
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading station data:', err);
+            }
+        }
+
+        function editStationTitle() {
+            const input = document.createElement('input');
+            input.value = stationTitle;
+            input.className = 'station-title';
+            
+            stationTitleEl.innerHTML = '';
+            stationTitleEl.appendChild(input);
+            input.focus();
+            input.select();
+            
+            function saveTitle() {
+                stationTitle = input.value.trim() || '📝 Notepad Station';
+                stationTitleEl.textContent = stationTitle;
+                saveToBoard();
+            }
+            
+            input.addEventListener('blur', saveTitle);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') saveTitle();
+                if (e.key === 'Escape') stationTitleEl.textContent = stationTitle;
+            });
+        }
+
+        // Event listeners
+        addBtn.addEventListener('click', () => {
+            addForm.classList.toggle('show');
+            if (addForm.classList.contains('show')) {
+                quickText.focus();
+            }
+        });
+
+        quickAddBtn.addEventListener('click', () => {
+            addNotepad(quickText.value, quickColor.value);
+            quickText.value = '';
+            addForm.classList.remove('show');
+        });
+
+        quickText.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                addNotepad(quickText.value, quickColor.value);
+                quickText.value = '';
+                addForm.classList.remove('show');
+            }
+        });
+
+        stationTitleEl.addEventListener('click', editStationTitle);
+
+        // Global functions for onclick handlers
+        window.deleteNotepad = deleteNotepad;
+        window.placeNote = placeNote;
+
+        // Initialize
+        if (typeof miro !== 'undefined') {
+            miro.onReady(async () => {
+                console.log('Miro SDK ready - Station:', stationId);
+                await loadFromBoard();
+                showStatus('Station ready');
+                
+                // Toolbar integration
                 miro.board.ui.on('icon:click', () => {
                     miro.board.ui.openPanel({
                         url: window.location.href,
                         width: 350,
-                        height: 600
+                        height: 500
                     });
                 });
             });
         } else {
             // Demo mode
-            window.addEventListener('load', () => {
-                showStatus('Demo mode - Miro SDK not loaded', 'error');
-            });
+            showStatus('Demo mode');
+            renderNotepads();
         }
     </script>
 </body>
