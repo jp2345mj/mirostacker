@@ -17,6 +17,10 @@
       "iconRelativeUrl": "icon.svg",
       "url": "index.html",
       "height": 600
+    },
+    "toolbarIcon": {
+      "iconRelativeUrl": "icon.svg",
+      "url": "index.html"
     }
   }
 }
