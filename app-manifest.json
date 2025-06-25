@@ -1,0 +1,10 @@
+{
+  "appName": "Sticky Note Pads",
+  "sdkVersion": "v2",
+  "scopes": [
+    "boards:read",
+    "boards:write"
+  ],
+  "allowedDomains": ["*.netlify.app"],
+  "enabledFeatures": ["panel"]
+}
