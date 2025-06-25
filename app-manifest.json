@@ -5,6 +5,18 @@
     "boards:read",
     "boards:write"
   ],
-  "allowedDomains": ["*.netlify.app"],
-  "enabledFeatures": ["panel"]
+  "baseUrl": "https://mirostacker.netlify.app",
+  "allowedDomains": [
+    "https://mirostacker.netlify.app"
+  ],
+  "termsLink": "https://mirostacker.netlify.app/terms.html",
+  "supportLink": "https://mirostacker.netlify.app/terms.html",
+  "extensions": {
+    "panel": {
+      "title": "Sticky Note Pads",
+      "iconRelativeUrl": "icon.svg",
+      "url": "index.html",
+      "height": 600
+    }
+  }
 }
