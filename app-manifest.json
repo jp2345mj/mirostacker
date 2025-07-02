@@ -1,26 +1,25 @@
-{
-  "appName": "Sticky Note Pads",
-  "sdkVersion": "v2",
-  "scopes": [
-    "boards:read",
-    "boards:write"
-  ],
-  "baseUrl": "https://mirostacker.netlify.app",
-  "allowedDomains": [
-    "https://mirostacker.netlify.app"
-  ],
-  "termsLink": "https://mirostacker.netlify.app/terms.html",
-  "supportLink": "https://mirostacker.netlify.app/terms.html",
-  "extensions": {
-    "panel": {
-      "title": "Sticky Note Pads",
-      "iconRelativeUrl": "icon.svg",
-      "url": "index.html",
-      "height": 600
-    },
-    "toolbarIcon": {
-      "iconRelativeUrl": "icon.svg",
-      "url": "index.html"
-    }
-  }
-}
+appName: Sticky Note Pads
+sdkVersion: SDK_V2
+sdkUri: https://mirostacker.netlify.app/index.html
+boardPicker:
+  allowedDomains:
+    - mirostacker.netlify.app
+redirectUris: []
+redirectUriForSdk: ''
+scopes:
+  - boards:write
+  - boards:read
+  - identity:read
+icons:
+  colored: >-
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0
+    300 300" class="colored-icon--app"><rect x="30" y="20" width="160"
+    height="160" fill="yellow"></rect><rect x="40" y="30" width="160"
+    height="160" fill="yellow"></rect><rect x="50" y="40" width="160"
+    height="160" fill="yellow"></rect></svg>
+  outline: >-
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0
+    300 300" class="outline-icon--app"><rect x="30" y="20" width="160"
+    height="160" fill="currentColor"></rect><rect x="40" y="30" width="160"
+    height="160" fill="currentColor"></rect><rect x="50" y="40" width="160"
+    height="160" fill="currentColor"></rect></svg>
